@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
-import { Settings } from 'lucide-react';
+import React, { useState } from 'react';
+import { Settings, AlertCircle } from 'lucide-react';
 import { TimelineSettings } from '@/lib/types';
-import { format } from 'date-fns';
+import { formatDateForInput, safeDateParse, validateDateRange } from '@/lib/dateUtils';
 
 interface SettingsPanelProps {
   settings: TimelineSettings;
@@ -11,8 +11,56 @@ interface SettingsPanelProps {
 }
 
 export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
-  const handleChange = (key: keyof TimelineSettings, value: string | boolean | Date) => {
+  const [dateError, setDateError] = useState<string>('');
+  const [tempStartDate, setTempStartDate] = useState(formatDateForInput(settings.startDate));
+  const [tempEndDate, setTempEndDate] = useState(formatDateForInput(settings.endDate));
+
+  const handleChange = (key: keyof TimelineSettings, value: string | boolean) => {
     onUpdate({ ...settings, [key]: value });
+  };
+
+  const handleDateChange = (type: 'start' | 'end', value: string) => {
+    // Update temp value immediately for smooth typing
+    if (type === 'start') {
+      setTempStartDate(value);
+    } else {
+      setTempEndDate(value);
+    }
+
+    // Clear error when user is typing
+    setDateError('');
+
+    // Try to parse the date
+    const parsedDate = safeDateParse(value);
+    
+    if (parsedDate) {
+      const newStartDate = type === 'start' ? parsedDate : settings.startDate;
+      const newEndDate = type === 'end' ? parsedDate : settings.endDate;
+      
+      const validation = validateDateRange(newStartDate, newEndDate);
+      
+      if (validation.isValid) {
+        onUpdate({
+          ...settings,
+          startDate: newStartDate,
+          endDate: newEndDate
+        });
+      } else {
+        setDateError(validation.error || 'Invalid date range');
+      }
+    }
+  };
+
+  const handleDateBlur = () => {
+    // On blur, reset to valid dates if current values are invalid
+    const startParsed = safeDateParse(tempStartDate);
+    const endParsed = safeDateParse(tempEndDate);
+    
+    if (!startParsed || !endParsed) {
+      setTempStartDate(formatDateForInput(settings.startDate));
+      setTempEndDate(formatDateForInput(settings.endDate));
+      setDateError('');
+    }
   };
 
   return (
@@ -33,25 +81,43 @@ export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
           />
         </div>
         
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-900 mb-1">Start Date</label>
-            <input
-              type="date"
-              value={format(settings.startDate, 'yyyy-MM-dd')}
-              onChange={(e) => handleChange('startDate', new Date(e.target.value))}
-              className="w-full px-3 py-2 border rounded text-sm text-gray-900"
-            />
+        <div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-1">Start Date</label>
+              <input
+                type="date"
+                value={tempStartDate}
+                onChange={(e) => handleDateChange('start', e.target.value)}
+                onBlur={handleDateBlur}
+                min="1900-01-01"
+                max="2100-12-31"
+                className={`w-full px-3 py-2 border rounded text-sm text-gray-900 ${
+                  dateError ? 'border-red-500' : ''
+                }`}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-1">End Date</label>
+              <input
+                type="date"
+                value={tempEndDate}
+                onChange={(e) => handleDateChange('end', e.target.value)}
+                onBlur={handleDateBlur}
+                min="1900-01-01"
+                max="2100-12-31"
+                className={`w-full px-3 py-2 border rounded text-sm text-gray-900 ${
+                  dateError ? 'border-red-500' : ''
+                }`}
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-900 mb-1">End Date</label>
-            <input
-              type="date"
-              value={format(settings.endDate, 'yyyy-MM-dd')}
-              onChange={(e) => handleChange('endDate', new Date(e.target.value))}
-              className="w-full px-3 py-2 border rounded text-sm text-gray-900"
-            />
-          </div>
+          {dateError && (
+            <div className="mt-2 flex items-center gap-1 text-red-600">
+              <AlertCircle className="h-4 w-4" />
+              <span className="text-xs">{dateError}</span>
+            </div>
+          )}
         </div>
         
         <div>

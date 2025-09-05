@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, forwardRef } from 'react';
 import { format, differenceInMonths, addMonths, startOfMonth, endOfMonth, differenceInDays } from 'date-fns';
 import { Project, Swimlane, TimelineSettings } from '@/lib/types';
+import { parseDate } from '@/lib/dateUtils';
 
 interface TimelineProps {
   projects: Project[];
@@ -15,10 +16,14 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const timelineStart = startOfMonth(settings.startDate);
-    const timelineEnd = endOfMonth(settings.endDate);
-    const totalMonths = differenceInMonths(timelineEnd, timelineStart) + 1;
-    const totalDays = differenceInDays(timelineEnd, timelineStart) + 1;
+    // Validate and safely parse dates
+    const validStartDate = parseDate(settings.startDate) || new Date();
+    const validEndDate = parseDate(settings.endDate) || new Date(new Date().getFullYear(), 11, 31);
+    
+    const timelineStart = startOfMonth(validStartDate);
+    const timelineEnd = endOfMonth(validEndDate);
+    const totalMonths = Math.max(1, differenceInMonths(timelineEnd, timelineStart) + 1);
+    const totalDays = Math.max(1, differenceInDays(timelineEnd, timelineStart) + 1);
 
     const MONTH_WIDTH = 120;
     const SWIMLANE_HEIGHT = 80;
@@ -135,9 +140,15 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
         const swimlaneProjects = projects.filter(p => p.swimlaneId === swimlane.id);
         swimlaneProjects.forEach(project => {
           if (project.type === 'range' && project.startDate && project.endDate) {
+            // Validate project dates
+            const validStartDate = parseDate(project.startDate);
+            const validEndDate = parseDate(project.endDate);
+            
+            if (!validStartDate || !validEndDate) return;
+            
             // Draw range bar
-            const startDays = differenceInDays(project.startDate, timelineStart);
-            const endDays = differenceInDays(project.endDate, timelineStart);
+            const startDays = differenceInDays(validStartDate, timelineStart);
+            const endDays = differenceInDays(validEndDate, timelineStart);
             const startX = PADDING + (startDays / totalDays) * (totalMonths * MONTH_WIDTH);
             const endX = PADDING + (endDays / totalDays) * (totalMonths * MONTH_WIDTH);
             const barY = y + SWIMLANE_HEIGHT / 2 - 10;
@@ -154,8 +165,13 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
               ctx.fillText(project.name, (startX + endX) / 2, barY + 14);
             }
           } else if (project.type === 'milestone' && project.deliveryDate) {
+            // Validate delivery date
+            const validDeliveryDate = parseDate(project.deliveryDate);
+            
+            if (!validDeliveryDate) return;
+            
             // Draw milestone triangle
-            const days = differenceInDays(project.deliveryDate, timelineStart);
+            const days = differenceInDays(validDeliveryDate, timelineStart);
             const x = PADDING + (days / totalDays) * (totalMonths * MONTH_WIDTH);
             const triangleY = y + SWIMLANE_HEIGHT / 2;
             
