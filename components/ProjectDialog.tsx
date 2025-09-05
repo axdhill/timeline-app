@@ -128,7 +128,7 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
                     type="radio"
                     value="range"
                     checked={formData.type === 'range'}
-                    onChange={(e) => setFormData({ ...formData, type: 'range' })}
+                    onChange={() => setFormData({ ...formData, type: 'range' })}
                     className="h-4 w-4 text-blue-600"
                   />
                   <Calendar className="h-4 w-4" />
@@ -139,7 +139,7 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
                     type="radio"
                     value="milestone"
                     checked={formData.type === 'milestone'}
-                    onChange={(e) => setFormData({ ...formData, type: 'milestone' })}
+                    onChange={() => setFormData({ ...formData, type: 'milestone' })}
                     className="h-4 w-4 text-blue-600"
                   />
                   <Triangle className="h-4 w-4" />

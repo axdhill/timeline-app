@@ -5,7 +5,7 @@ import html2canvas from 'html2canvas';
 import { Download } from 'lucide-react';
 
 interface ExportButtonProps {
-  timelineRef: React.RefObject<HTMLDivElement>;
+  timelineRef: React.RefObject<HTMLDivElement | null>;
   filename?: string;
 }
 

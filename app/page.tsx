@@ -7,7 +7,7 @@ import { SwimlaneManager } from '@/components/SwimlaneManager';
 import { SettingsPanel } from '@/components/SettingsPanel';
 import { ExportButton } from '@/components/ExportButton';
 import { Project, Swimlane, TimelineSettings } from '@/lib/types';
-import { Plus, Edit2, Trash2, Calendar } from 'lucide-react';
+import { Plus, Edit2, Trash2 } from 'lucide-react';
 import { generateId } from '@/lib/utils';
 
 export default function Home() {
@@ -105,7 +105,7 @@ export default function Home() {
               
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {projects.length === 0 ? (
-                  <p className="text-gray-500 text-center py-8">No projects yet. Click "Add Project" to get started.</p>
+                  <p className="text-gray-500 text-center py-8">No projects yet. Click &quot;Add Project&quot; to get started.</p>
                 ) : (
                   projects.map(project => (
                     <div key={project.id} className="flex items-center gap-3 p-3 border rounded hover:bg-gray-50">

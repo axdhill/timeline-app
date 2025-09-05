@@ -184,6 +184,7 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
 
     useEffect(() => {
       drawTimeline();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [projects, swimlanes, settings]);
 
     return (

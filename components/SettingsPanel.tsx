@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Settings, Calendar } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { TimelineSettings } from '@/lib/types';
 import { format } from 'date-fns';
 
@@ -11,7 +11,7 @@ interface SettingsPanelProps {
 }
 
 export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
-  const handleChange = (key: keyof TimelineSettings, value: any) => {
+  const handleChange = (key: keyof TimelineSettings, value: string | boolean | Date) => {
     onUpdate({ ...settings, [key]: value });
   };
 
