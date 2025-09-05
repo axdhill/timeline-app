@@ -80,7 +80,7 @@ export function SwimlaneManager({ swimlanes, onUpdate }: SwimlaneManagerProps) {
       <div className="space-y-2 mb-4">
         {swimlanes.map((swimlane, index) => (
           <div key={swimlane.id} className="flex items-center gap-2 p-2 border rounded">
-            <GripVertical className="h-4 w-4 text-gray-400" />
+            <GripVertical className="h-4 w-4 text-gray-600" />
             
             {editingId === swimlane.id ? (
               <>
@@ -88,7 +88,7 @@ export function SwimlaneManager({ swimlanes, onUpdate }: SwimlaneManagerProps) {
                   type="text"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="flex-1 px-2 py-1 border rounded text-sm"
+                  className="flex-1 px-2 py-1 border rounded text-sm text-gray-900"
                 />
                 <input
                   type="color"
@@ -111,7 +111,7 @@ export function SwimlaneManager({ swimlanes, onUpdate }: SwimlaneManagerProps) {
               </>
             ) : (
               <>
-                <span className="flex-1 text-sm">{swimlane.name}</span>
+                <span className="flex-1 text-sm text-gray-900">{swimlane.name}</span>
                 <div
                   className="w-6 h-6 rounded"
                   style={{ backgroundColor: swimlane.color }}
@@ -119,14 +119,14 @@ export function SwimlaneManager({ swimlanes, onUpdate }: SwimlaneManagerProps) {
                 <button
                   onClick={() => handleMoveUp(index)}
                   disabled={index === 0}
-                  className="p-1 text-gray-600 hover:text-gray-800 disabled:opacity-50"
+                  className="p-1 text-gray-700 hover:text-gray-900 disabled:opacity-50"
                 >
                   ↑
                 </button>
                 <button
                   onClick={() => handleMoveDown(index)}
                   disabled={index === swimlanes.length - 1}
-                  className="p-1 text-gray-600 hover:text-gray-800 disabled:opacity-50"
+                  className="p-1 text-gray-700 hover:text-gray-900 disabled:opacity-50"
                 >
                   ↓
                 </button>
@@ -155,7 +155,7 @@ export function SwimlaneManager({ swimlanes, onUpdate }: SwimlaneManagerProps) {
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleAdd()}
-          className="flex-1 px-3 py-2 border rounded text-sm"
+          className="flex-1 px-3 py-2 border rounded text-sm text-gray-900"
         />
         <input
           type="color"

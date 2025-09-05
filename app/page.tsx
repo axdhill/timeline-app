@@ -45,8 +45,8 @@ export default function Home() {
     endDate: new Date('2024-12-31'),
     title: 'Project Timeline 2024',
     backgroundColor: '#ffffff',
-    gridColor: '#e5e7eb',
-    textColor: '#1f2937',
+    gridColor: '#d1d5db',
+    textColor: '#111827',
     showGrid: true,
     showYearLabels: true,
     monthFormat: 'short',
@@ -86,7 +86,7 @@ export default function Home() {
       <div className="container mx-auto py-8 px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Timeline Creator</h1>
-          <p className="text-gray-600">Create beautiful Gantt-like timelines with customizable projects and swimlanes</p>
+          <p className="text-gray-800">Create beautiful Gantt-like timelines with customizable projects and swimlanes</p>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -105,7 +105,7 @@ export default function Home() {
               
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {projects.length === 0 ? (
-                  <p className="text-gray-500 text-center py-8">No projects yet. Click &quot;Add Project&quot; to get started.</p>
+                  <p className="text-gray-700 text-center py-8">No projects yet. Click &quot;Add Project&quot; to get started.</p>
                 ) : (
                   projects.map(project => (
                     <div key={project.id} className="flex items-center gap-3 p-3 border rounded hover:bg-gray-50">
@@ -115,13 +115,13 @@ export default function Home() {
                       />
                       <div className="flex-1">
                         <div className="font-medium text-sm">{project.name}</div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-700">
                           {project.type === 'range' 
                             ? `${project.startDate?.toLocaleDateString()} - ${project.endDate?.toLocaleDateString()}`
                             : project.deliveryDate?.toLocaleDateString()}
                         </div>
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-700">
                         {swimlanes.find(s => s.id === project.swimlaneId)?.name}
                       </div>
                       <button

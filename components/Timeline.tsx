@@ -44,7 +44,7 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
       // Draw header with months
       ctx.strokeStyle = settings.gridColor;
       ctx.fillStyle = settings.textColor;
-      ctx.font = '12px system-ui, -apple-system, sans-serif';
+      ctx.font = '600 13px system-ui, -apple-system, sans-serif';
       ctx.lineWidth = 1;
 
       let currentDate = new Date(timelineStart);
@@ -81,7 +81,7 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
         let yOffset = 0;
         years.forEach(year => {
           ctx.fillStyle = settings.textColor;
-          ctx.font = 'bold 14px system-ui, -apple-system, sans-serif';
+          ctx.font = '700 15px system-ui, -apple-system, sans-serif';
           ctx.textAlign = 'left';
           ctx.fillText(year.toString(), canvasWidth - YEAR_WIDTH + 10, HEADER_HEIGHT + 30 + (yOffset * 30));
           yOffset++;
@@ -99,7 +99,7 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
         
         // Draw swimlane label
         ctx.fillStyle = settings.textColor;
-        ctx.font = 'bold 12px system-ui, -apple-system, sans-serif';
+        ctx.font = '700 13px system-ui, -apple-system, sans-serif';
         ctx.textAlign = 'left';
         ctx.fillText(swimlane.name, PADDING + 10, y + 20);
         
@@ -147,7 +147,7 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
             
             // Draw project name
             ctx.fillStyle = '#ffffff';
-            ctx.font = '11px system-ui, -apple-system, sans-serif';
+            ctx.font = '600 11px system-ui, -apple-system, sans-serif';
             ctx.textAlign = 'center';
             const textWidth = ctx.measureText(project.name).width;
             if (textWidth < (endX - startX - 10)) {
@@ -169,7 +169,7 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
             
             // Draw project name
             ctx.fillStyle = settings.textColor;
-            ctx.font = '10px system-ui, -apple-system, sans-serif';
+            ctx.font = '600 11px system-ui, -apple-system, sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText(project.name, x, triangleY + 22);
           }

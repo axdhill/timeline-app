@@ -69,16 +69,16 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         <Dialog.Content className="fixed left-[50%] top-[50%] max-h-[85vh] w-[90vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]">
-          <Dialog.Title className="text-lg font-semibold">
+          <Dialog.Title className="text-lg font-semibold text-gray-900">
             {project ? 'Edit Project' : 'Add New Project'}
           </Dialog.Title>
-          <Dialog.Description className="mt-2 mb-4 text-sm text-gray-500">
+          <Dialog.Description className="mt-2 mb-4 text-sm text-gray-700">
             {project ? 'Update the project details below.' : 'Create a new project for your timeline.'}
           </Dialog.Description>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label.Root htmlFor="name" className="text-sm font-medium">
+              <Label.Root htmlFor="name" className="text-sm font-medium text-gray-900">
                 Project Name
               </Label.Root>
               <input
@@ -86,13 +86,13 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 required
               />
             </div>
             
             <div>
-              <Label.Root htmlFor="swimlane" className="text-sm font-medium">
+              <Label.Root htmlFor="swimlane" className="text-sm font-medium text-gray-900">
                 Swimlane
               </Label.Root>
               <Select.Root value={formData.swimlaneId} onValueChange={(value) => setFormData({ ...formData, swimlaneId: value })}>
@@ -109,7 +109,7 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
                         <Select.Item
                           key={swimlane.id}
                           value={swimlane.id}
-                          className="relative flex items-center px-8 py-2 text-sm hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                          className="relative flex items-center px-8 py-2 text-sm text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                         >
                           <Select.ItemText>{swimlane.name}</Select.ItemText>
                         </Select.Item>
@@ -121,7 +121,7 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
             </div>
             
             <div>
-              <Label.Root className="text-sm font-medium">Project Type</Label.Root>
+              <Label.Root className="text-sm font-medium text-gray-900">Project Type</Label.Root>
               <div className="mt-2 flex gap-4">
                 <label className="flex items-center gap-2">
                   <input
@@ -132,7 +132,7 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
                     className="h-4 w-4 text-blue-600"
                   />
                   <Calendar className="h-4 w-4" />
-                  <span className="text-sm">Date Range</span>
+                  <span className="text-sm text-gray-900">Date Range</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input
@@ -143,7 +143,7 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
                     className="h-4 w-4 text-blue-600"
                   />
                   <Triangle className="h-4 w-4" />
-                  <span className="text-sm">Milestone</span>
+                  <span className="text-sm text-gray-900">Milestone</span>
                 </label>
               </div>
             </div>
@@ -151,7 +151,7 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
             {formData.type === 'range' ? (
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label.Root htmlFor="startDate" className="text-sm font-medium">
+                  <Label.Root htmlFor="startDate" className="text-sm font-medium text-gray-900">
                     Start Date
                   </Label.Root>
                   <input
@@ -159,12 +159,12 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
                     type="date"
                     value={formData.startDate ? format(formData.startDate, 'yyyy-MM-dd') : ''}
                     onChange={(e) => setFormData({ ...formData, startDate: new Date(e.target.value) })}
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     required
                   />
                 </div>
                 <div>
-                  <Label.Root htmlFor="endDate" className="text-sm font-medium">
+                  <Label.Root htmlFor="endDate" className="text-sm font-medium text-gray-900">
                     End Date
                   </Label.Root>
                   <input
@@ -172,14 +172,14 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
                     type="date"
                     value={formData.endDate ? format(formData.endDate, 'yyyy-MM-dd') : ''}
                     onChange={(e) => setFormData({ ...formData, endDate: new Date(e.target.value) })}
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     required
                   />
                 </div>
               </div>
             ) : (
               <div>
-                <Label.Root htmlFor="deliveryDate" className="text-sm font-medium">
+                <Label.Root htmlFor="deliveryDate" className="text-sm font-medium text-gray-900">
                   Delivery Date
                 </Label.Root>
                 <input
@@ -187,14 +187,14 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
                   type="date"
                   value={formData.deliveryDate ? format(formData.deliveryDate, 'yyyy-MM-dd') : ''}
                   onChange={(e) => setFormData({ ...formData, deliveryDate: new Date(e.target.value) })}
-                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   required
                 />
               </div>
             )}
             
             <div>
-              <Label.Root htmlFor="color" className="text-sm font-medium">
+              <Label.Root htmlFor="color" className="text-sm font-medium text-gray-900">
                 Color
               </Label.Root>
               <div className="mt-1 flex items-center gap-2">
@@ -215,7 +215,7 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
             </div>
             
             <div>
-              <Label.Root htmlFor="description" className="text-sm font-medium">
+              <Label.Root htmlFor="description" className="text-sm font-medium text-gray-900">
                 Description (Optional)
               </Label.Root>
               <textarea
@@ -223,7 +223,7 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 rows={3}
-                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
             
@@ -231,7 +231,7 @@ export function ProjectDialog({ open, onOpenChange, swimlanes, onSave, project }
               <button
                 type="button"
                 onClick={() => onOpenChange(false)}
-                className="rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                className="rounded-md px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-100"
               >
                 Cancel
               </button>

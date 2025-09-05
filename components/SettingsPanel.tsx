@@ -24,42 +24,42 @@ export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
       
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
+          <label className="block text-sm font-medium text-gray-900 mb-1">Title</label>
           <input
             type="text"
             value={settings.title}
             onChange={(e) => handleChange('title', e.target.value)}
-            className="w-full px-3 py-2 border rounded text-sm"
+            className="w-full px-3 py-2 border rounded text-sm text-gray-900"
           />
         </div>
         
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Start Date</label>
+            <label className="block text-sm font-medium text-gray-900 mb-1">Start Date</label>
             <input
               type="date"
               value={format(settings.startDate, 'yyyy-MM-dd')}
               onChange={(e) => handleChange('startDate', new Date(e.target.value))}
-              className="w-full px-3 py-2 border rounded text-sm"
+              className="w-full px-3 py-2 border rounded text-sm text-gray-900"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">End Date</label>
+            <label className="block text-sm font-medium text-gray-900 mb-1">End Date</label>
             <input
               type="date"
               value={format(settings.endDate, 'yyyy-MM-dd')}
               onChange={(e) => handleChange('endDate', new Date(e.target.value))}
-              className="w-full px-3 py-2 border rounded text-sm"
+              className="w-full px-3 py-2 border rounded text-sm text-gray-900"
             />
           </div>
         </div>
         
         <div>
-          <label className="block text-sm font-medium mb-1">Month Format</label>
+          <label className="block text-sm font-medium text-gray-900 mb-1">Month Format</label>
           <select
             value={settings.monthFormat}
             onChange={(e) => handleChange('monthFormat', e.target.value)}
-            className="w-full px-3 py-2 border rounded text-sm"
+            className="w-full px-3 py-2 border rounded text-sm text-gray-900"
           >
             <option value="short">Short (Jan, Feb, Mar)</option>
             <option value="long">Long (January, February, March)</option>
@@ -68,7 +68,7 @@ export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
         
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Background</label>
+            <label className="block text-sm font-medium text-gray-900 mb-1">Background</label>
             <div className="flex gap-2">
               <input
                 type="color"
@@ -80,13 +80,13 @@ export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
                 type="text"
                 value={settings.backgroundColor}
                 onChange={(e) => handleChange('backgroundColor', e.target.value)}
-                className="flex-1 px-2 py-1 border rounded text-sm"
+                className="flex-1 px-2 py-1 border rounded text-sm text-gray-900"
               />
             </div>
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-1">Text Color</label>
+            <label className="block text-sm font-medium text-gray-900 mb-1">Text Color</label>
             <div className="flex gap-2">
               <input
                 type="color"
@@ -98,14 +98,14 @@ export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
                 type="text"
                 value={settings.textColor}
                 onChange={(e) => handleChange('textColor', e.target.value)}
-                className="flex-1 px-2 py-1 border rounded text-sm"
+                className="flex-1 px-2 py-1 border rounded text-sm text-gray-900"
               />
             </div>
           </div>
         </div>
         
         <div>
-          <label className="block text-sm font-medium mb-1">Grid Color</label>
+          <label className="block text-sm font-medium text-gray-900 mb-1">Grid Color</label>
           <div className="flex gap-2">
             <input
               type="color"
@@ -117,7 +117,7 @@ export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
               type="text"
               value={settings.gridColor}
               onChange={(e) => handleChange('gridColor', e.target.value)}
-              className="flex-1 px-2 py-1 border rounded text-sm"
+              className="flex-1 px-2 py-1 border rounded text-sm text-gray-900"
             />
           </div>
         </div>
@@ -130,7 +130,7 @@ export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
               onChange={(e) => handleChange('showGrid', e.target.checked)}
               className="h-4 w-4 text-blue-600"
             />
-            <span className="text-sm">Show Grid Lines</span>
+            <span className="text-sm text-gray-900">Show Grid Lines</span>
           </label>
           
           <label className="flex items-center gap-2">
@@ -140,7 +140,7 @@ export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
               onChange={(e) => handleChange('showYearLabels', e.target.checked)}
               className="h-4 w-4 text-blue-600"
             />
-            <span className="text-sm">Show Year Labels</span>
+            <span className="text-sm text-gray-900">Show Year Labels</span>
           </label>
         </div>
       </div>
