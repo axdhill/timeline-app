@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import html2canvas from 'html2canvas';
 import { Download } from 'lucide-react';
 
 interface ExportButtonProps {
@@ -18,14 +17,25 @@ export function ExportButton({ timelineRef, filename = 'timeline' }: ExportButto
     setIsExporting(true);
     
     try {
-      const canvas = await html2canvas(timelineRef.current, {
-        scale: 3, // High DPI
-        backgroundColor: '#ffffff',
-        logging: false,
-        useCORS: true,
-        allowTaint: true,
-      });
+      // Try to use the high-quality export method if available
+      const timeline = timelineRef.current as HTMLDivElement & { exportHighQuality?: () => HTMLCanvasElement | null };
+      let canvas: HTMLCanvasElement | null = null;
       
+      if (timeline.exportHighQuality) {
+        // Use the high-quality export method from Timeline component
+        canvas = timeline.exportHighQuality();
+      } else {
+        // Fallback to finding the canvas directly
+        canvas = timelineRef.current.querySelector('canvas');
+      }
+      
+      if (!canvas) {
+        console.error('Canvas not found');
+        setIsExporting(false);
+        return;
+      }
+      
+      // Convert canvas to blob with maximum quality
       canvas.toBlob((blob) => {
         if (blob) {
           const url = URL.createObjectURL(blob);
@@ -39,7 +49,8 @@ export function ExportButton({ timelineRef, filename = 'timeline' }: ExportButto
     } catch (error) {
       console.error('Export failed:', error);
     } finally {
-      setIsExporting(false);
+      // Give some time for the export to complete before resetting
+      setTimeout(() => setIsExporting(false), 500);
     }
   };
 

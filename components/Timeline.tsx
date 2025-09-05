@@ -9,10 +9,11 @@ interface TimelineProps {
   projects: Project[];
   swimlanes: Swimlane[];
   settings: TimelineSettings;
+  scaleFactor?: number; // For high-DPI export
 }
 
 export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
-  ({ projects, swimlanes, settings }, ref) => {
+  ({ projects, swimlanes, settings, scaleFactor = 1 }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -25,6 +26,8 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
     const totalMonths = Math.max(1, differenceInMonths(timelineEnd, timelineStart) + 1);
     const totalDays = Math.max(1, differenceInDays(timelineEnd, timelineStart) + 1);
 
+    // Scale dimensions for high-DPI
+    const scale = (typeof window !== 'undefined' ? window.devicePixelRatio : 1) * scaleFactor;
     const MONTH_WIDTH = 120;
     const SWIMLANE_HEIGHT = 80;
     const HEADER_HEIGHT = 60;
@@ -34,22 +37,39 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
     const canvasWidth = PADDING + (totalMonths * MONTH_WIDTH) + YEAR_WIDTH + PADDING;
     const canvasHeight = HEADER_HEIGHT + (swimlanes.length * SWIMLANE_HEIGHT) + PADDING;
 
-    const drawTimeline = () => {
+    const drawTimeline = (exportScale: number = 1) => {
       const canvas = canvasRef.current;
-      const ctx = canvas?.getContext('2d');
+      const ctx = canvas?.getContext('2d', { alpha: false });
       if (!canvas || !ctx) return;
 
-      canvas.width = canvasWidth;
-      canvas.height = canvasHeight;
+      // Set actual canvas size (scaled for high DPI)
+      const actualScale = exportScale || scale;
+      canvas.width = canvasWidth * actualScale;
+      canvas.height = canvasHeight * actualScale;
 
-      // Clear canvas
+      // Set display size (CSS pixels)
+      canvas.style.width = `${canvasWidth}px`;
+      canvas.style.height = `${canvasHeight}px`;
+
+      // Scale context for high DPI
+      ctx.scale(actualScale, actualScale);
+
+      // Enable better text rendering
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      
+      // Clear canvas with background
       ctx.fillStyle = settings.backgroundColor;
       ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
+      // Set better font rendering
+      const baseFont = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+      
       // Draw header with months
       ctx.strokeStyle = settings.gridColor;
       ctx.fillStyle = settings.textColor;
-      ctx.font = '600 13px system-ui, -apple-system, sans-serif';
+      ctx.font = `600 14px ${baseFont}`;
+      ctx.textBaseline = 'middle';
       ctx.lineWidth = 1;
 
       let currentDate = new Date(timelineStart);
@@ -60,11 +80,13 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
         const monthLabel = format(currentDate, settings.monthFormat === 'short' ? 'MMM' : 'MMMM');
         ctx.fillStyle = settings.textColor;
         ctx.textAlign = 'center';
+        ctx.font = `600 14px ${baseFont}`;
         ctx.fillText(monthLabel, x + MONTH_WIDTH / 2, 25);
         
         // Draw vertical grid lines
         if (settings.showGrid) {
           ctx.strokeStyle = settings.gridColor;
+          ctx.lineWidth = 0.5;
           ctx.beginPath();
           ctx.moveTo(x, HEADER_HEIGHT);
           ctx.lineTo(x, canvasHeight);
@@ -86,7 +108,7 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
         let yOffset = 0;
         years.forEach(year => {
           ctx.fillStyle = settings.textColor;
-          ctx.font = '700 15px system-ui, -apple-system, sans-serif';
+          ctx.font = `700 16px ${baseFont}`;
           ctx.textAlign = 'left';
           ctx.fillText(year.toString(), canvasWidth - YEAR_WIDTH + 10, HEADER_HEIGHT + 30 + (yOffset * 30));
           yOffset++;
@@ -104,13 +126,15 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
         
         // Draw swimlane label
         ctx.fillStyle = settings.textColor;
-        ctx.font = '700 13px system-ui, -apple-system, sans-serif';
+        ctx.font = `700 14px ${baseFont}`;
         ctx.textAlign = 'left';
-        ctx.fillText(swimlane.name, PADDING + 10, y + 20);
+        ctx.textBaseline = 'top';
+        ctx.fillText(swimlane.name, PADDING + 10, y + 8);
         
         // Draw horizontal grid line
         if (settings.showGrid) {
           ctx.strokeStyle = settings.gridColor;
+          ctx.lineWidth = 0.5;
           ctx.beginPath();
           ctx.moveTo(PADDING, y);
           ctx.lineTo(PADDING + totalMonths * MONTH_WIDTH, y);
@@ -153,16 +177,30 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
             const endX = PADDING + (endDays / totalDays) * (totalMonths * MONTH_WIDTH);
             const barY = y + SWIMLANE_HEIGHT / 2 - 10;
             
+            // Draw bar with slight rounding
+            const radius = 2;
             ctx.fillStyle = project.color;
-            ctx.fillRect(startX, barY, endX - startX, 20);
+            ctx.beginPath();
+            ctx.moveTo(startX + radius, barY);
+            ctx.lineTo(endX - radius, barY);
+            ctx.quadraticCurveTo(endX, barY, endX, barY + radius);
+            ctx.lineTo(endX, barY + 20 - radius);
+            ctx.quadraticCurveTo(endX, barY + 20, endX - radius, barY + 20);
+            ctx.lineTo(startX + radius, barY + 20);
+            ctx.quadraticCurveTo(startX, barY + 20, startX, barY + 20 - radius);
+            ctx.lineTo(startX, barY + radius);
+            ctx.quadraticCurveTo(startX, barY, startX + radius, barY);
+            ctx.closePath();
+            ctx.fill();
             
             // Draw project name
             ctx.fillStyle = '#ffffff';
-            ctx.font = '600 11px system-ui, -apple-system, sans-serif';
+            ctx.font = `600 12px ${baseFont}`;
             ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
             const textWidth = ctx.measureText(project.name).width;
             if (textWidth < (endX - startX - 10)) {
-              ctx.fillText(project.name, (startX + endX) / 2, barY + 14);
+              ctx.fillText(project.name, (startX + endX) / 2, barY + 10);
             }
           } else if (project.type === 'milestone' && project.deliveryDate) {
             // Validate delivery date
@@ -185,16 +223,17 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
             
             // Draw project name
             ctx.fillStyle = settings.textColor;
-            ctx.font = '600 11px system-ui, -apple-system, sans-serif';
+            ctx.font = `600 11px ${baseFont}`;
             ctx.textAlign = 'center';
-            ctx.fillText(project.name, x, triangleY + 22);
+            ctx.textBaseline = 'top';
+            ctx.fillText(project.name, x, triangleY + 12);
           }
         });
       });
 
       // Draw border
       ctx.strokeStyle = settings.gridColor;
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 1.5;
       ctx.strokeRect(PADDING, HEADER_HEIGHT, totalMonths * MONTH_WIDTH, swimlanes.length * SWIMLANE_HEIGHT);
     };
 
@@ -202,6 +241,17 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
       drawTimeline();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [projects, swimlanes, settings]);
+
+    // Expose draw method for high-quality export
+    useEffect(() => {
+      if (ref && typeof ref === 'object' && ref.current) {
+        (ref.current as HTMLDivElement & { exportHighQuality?: () => HTMLCanvasElement | null }).exportHighQuality = () => {
+          drawTimeline(4); // 4x scale for export
+          return canvasRef.current;
+        };
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ref]);
 
     return (
       <div ref={ref} className="overflow-auto bg-white rounded-lg shadow-lg p-4">
@@ -212,7 +262,11 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
           <canvas 
             ref={canvasRef} 
             className="block"
-            style={{ maxWidth: '100%', height: 'auto' }}
+            style={{ 
+              maxWidth: '100%', 
+              height: 'auto',
+              imageRendering: 'crisp-edges'
+            }}
           />
         </div>
       </div>
