@@ -235,6 +235,56 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
       ctx.strokeStyle = settings.gridColor;
       ctx.lineWidth = 1.5;
       ctx.strokeRect(PADDING, HEADER_HEIGHT, totalMonths * MONTH_WIDTH, swimlanes.length * SWIMLANE_HEIGHT);
+      
+      // Draw current date line
+      if (settings.showCurrentDate) {
+        const today = new Date();
+        const todayStartOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        
+        // Check if current date is within timeline range
+        if (todayStartOfDay >= timelineStart && todayStartOfDay <= timelineEnd) {
+          const daysSinceStart = differenceInDays(todayStartOfDay, timelineStart);
+          const x = PADDING + (daysSinceStart / totalDays) * (totalMonths * MONTH_WIDTH);
+          
+          // Draw the vertical line
+          ctx.strokeStyle = settings.currentDateColor || '#ef4444';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([5, 5]); // Dashed line
+          ctx.beginPath();
+          ctx.moveTo(x, HEADER_HEIGHT);
+          ctx.lineTo(x, HEADER_HEIGHT + swimlanes.length * SWIMLANE_HEIGHT);
+          ctx.stroke();
+          ctx.setLineDash([]); // Reset to solid line
+          
+          // Draw "Today" label
+          ctx.fillStyle = settings.currentDateColor || '#ef4444';
+          ctx.font = `700 11px ${baseFont}`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          
+          // Background for the label
+          const labelText = 'Today';
+          const textMetrics = ctx.measureText(labelText);
+          const labelWidth = textMetrics.width + 8;
+          const labelHeight = 18;
+          const labelY = HEADER_HEIGHT - 5;
+          
+          // White background with border
+          ctx.fillStyle = settings.backgroundColor;
+          ctx.fillRect(x - labelWidth/2, labelY - labelHeight, labelWidth, labelHeight);
+          ctx.strokeStyle = settings.currentDateColor || '#ef4444';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x - labelWidth/2, labelY - labelHeight, labelWidth, labelHeight);
+          
+          // Draw text
+          ctx.fillStyle = settings.currentDateColor || '#ef4444';
+          ctx.fillText(labelText, x, labelY - 2);
+          
+          // Draw date below
+          ctx.font = `400 10px ${baseFont}`;
+          ctx.fillText(format(today, 'MMM d'), x, labelY + 12);
+        }
+      }
     };
 
     useEffect(() => {

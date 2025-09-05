@@ -66,8 +66,8 @@ export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
   return (
     <div className="bg-white rounded-lg shadow p-4">
       <div className="flex items-center gap-2 mb-4">
-        <Settings className="h-5 w-5" />
-        <h3 className="text-lg font-semibold">Timeline Settings</h3>
+        <Settings className="h-5 w-5 text-gray-900" />
+        <h3 className="text-lg font-semibold text-gray-900">Timeline Settings</h3>
       </div>
       
       <div className="space-y-4">
@@ -208,7 +208,37 @@ export function SettingsPanel({ settings, onUpdate }: SettingsPanelProps) {
             />
             <span className="text-sm text-gray-900">Show Year Labels</span>
           </label>
+          
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={settings.showCurrentDate}
+              onChange={(e) => handleChange('showCurrentDate', e.target.checked)}
+              className="h-4 w-4 text-blue-600"
+            />
+            <span className="text-sm text-gray-900">Show Current Date Line</span>
+          </label>
         </div>
+        
+        {settings.showCurrentDate && (
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-1">Current Date Line Color</label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                value={settings.currentDateColor}
+                onChange={(e) => handleChange('currentDateColor', e.target.value)}
+                className="w-12 h-8 cursor-pointer"
+              />
+              <input
+                type="text"
+                value={settings.currentDateColor}
+                onChange={(e) => handleChange('currentDateColor', e.target.value)}
+                className="flex-1 px-2 py-1 border rounded text-sm text-gray-900"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

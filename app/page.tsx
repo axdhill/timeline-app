@@ -49,6 +49,8 @@ export default function Home() {
     textColor: '#111827',
     showGrid: true,
     showYearLabels: true,
+    showCurrentDate: true,
+    currentDateColor: '#ef4444',
     monthFormat: 'short',
   });
 
@@ -93,7 +95,7 @@ export default function Home() {
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">Projects</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Projects</h3>
                 <button
                   onClick={handleAddProject}
                   className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -149,7 +151,7 @@ export default function Home() {
             <SettingsPanel settings={settings} onUpdate={setSettings} />
             
             <div className="bg-white rounded-lg shadow p-4">
-              <h3 className="text-lg font-semibold mb-4">Export</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Export</h3>
               <ExportButton timelineRef={timelineRef} filename={settings.title.replace(/\s+/g, '_')} />
             </div>
           </div>

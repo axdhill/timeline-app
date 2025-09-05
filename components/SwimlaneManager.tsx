@@ -75,7 +75,7 @@ export function SwimlaneManager({ swimlanes, onUpdate }: SwimlaneManagerProps) {
 
   return (
     <div className="bg-white rounded-lg shadow p-4">
-      <h3 className="text-lg font-semibold mb-4">Swimlanes</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">Swimlanes</h3>
       
       <div className="space-y-2 mb-4">
         {swimlanes.map((swimlane, index) => (

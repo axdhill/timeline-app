@@ -26,6 +26,8 @@ export interface TimelineSettings {
   textColor: string;
   showGrid: boolean;
   showYearLabels: boolean;
+  showCurrentDate: boolean;
+  currentDateColor: string;
   monthFormat: 'short' | 'long';
 }
 
